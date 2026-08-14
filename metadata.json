@@ -1,0 +1,6 @@
+{
+  "name": "GoLumo",
+  "description": "AI-Powered Travel Planner & Assistant - Complete personalized trip itineraries, interactive maps, weather updates, budget calculation, and live nearby recommendations in India.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
