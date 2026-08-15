@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoLumo - Travel App Onboarding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       RESET & GLOBAL STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #d2e7ff 0%, #eff6ff 40%, #daeeff 70%, #f0f8ff 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 10px;
+      color: #0f172a;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       REALISTIC 3D FLUFFY DRIFTING CLOUDS
+       ========================================================================== */
+    .bg-clouds-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .real-cloud-svg {
+      position: absolute;
+      will-change: transform;
+      filter: drop-shadow(0 14px 22px rgba(2, 132, 199, 0.12));
+      opacity: 0.9;
+    }
+
+    .drift-1 {
+      width: 240px;
+      top: 6%;
+      left: -260px;
+      animation: driftCloud 32s linear infinite;
+    }
+    .drift-2 {
+      width: 290px;
+      top: 38%;
+      left: -320px;
+      animation: driftCloud 42s linear infinite 8s;
+    }
+    .drift-3 {
+      width: 210px;
+      top: 70%;
+      left: -230px;
+      animation: driftCloud 28s linear infinite 16s;
+    }
+
+    @keyframes driftCloud {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 420px)); }
+    }
+
+    /* Stage-specific fluffy clouds */
+    .stage-real-cloud {
+      position: absolute;
+      z-index: 5;
+      filter: drop-shadow(0 10px 18px rgba(3, 105, 161, 0.12));
+      animation: floatSoftCloud 5s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes floatSoftCloud {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-8px) scale(1.02); }
+    }
+
+    /* ==========================================================================
+       MOBILE APP DEVICE FRAME
+       ========================================================================== */
+    .app-viewport {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 410px;
+      height: 820px;
+      max-height: 92vh;
+      background: linear-gradient(180deg, #e3f1ff 0%, #f4f9ff 35%, #ffffff 100%);
+      border-radius: 42px;
+      box-shadow: 0 30px 70px -15px rgba(14, 116, 144, 0.22), 
+                  0 0 0 12px rgba(255, 255, 255, 0.9),
+                  0 0 0 13px rgba(186, 230, 253, 0.6);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header Bar */
+    .app-header {
+      padding: 20px 24px 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 30;
+      position: relative;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 22px;
+      color: #0369a1;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    .skip-btn {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(186, 230, 253, 0.9);
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .skip-btn:hover, .skip-btn:active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       SLIDER & CAROUSEL LAYOUT
+       ========================================================================== */
+    .slider-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    .slider-container:active {
+      cursor: grabbing;
+    }
+
+    .slides-track {
+      display: flex;
+      height: 100%;
+      width: 300%;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .slide {
+      width: 33.3333%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 24px 28px 24px;
+      position: relative;
+      flex-shrink: 0;
+      opacity: 0.2;
+      filter: blur(1.5px);
+      transform: scale(0.95);
+      transition: opacity 0.55s ease, filter 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, filter, transform;
+    }
+
+    .slide.active-slide {
+      opacity: 1;
+      filter: blur(0px);
+      transform: scale(1);
+    }
+
+    /* Staggered entrance animations (slide-up + opacity) for active slide elements */
+    .slide .hero-circle-frame {
+      opacity: 0.2;
+      transform: scale(0.92) translateY(14px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide.active-slide .hero-circle-frame {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      transition-delay: 0.04s;
+    }
+
+    .slide .slide-title {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide.active-slide .slide-title {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.18s;
+    }
+
+    .slide .slide-subtitle {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide.active-slide .slide-subtitle {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.28s;
+    }
+
+    /* Floating capsules, mini circles & profile badges base state */
+    .slide .capsule,
+    .slide .capsule-v,
+    .slide .mini-circle,
+    .slide .profile-capsule {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Centered capsules maintain translateX(-50%) during slide-up */
+    .slide .s2-cap-dest,
+    .slide .s3-cap-weath {
+      transform: translateX(-50%) translateY(22px);
+    }
+
+    /* Active slide visible state */
+    .slide.active-slide .capsule,
+    .slide.active-slide .capsule-v,
+    .slide.active-slide .mini-circle,
+    .slide.active-slide .profile-capsule {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.active-slide .s2-cap-dest,
+    .slide.active-slide .s3-cap-weath {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Staggered entrance delays for Slide 1 items */
+    .slide.active-slide .mini-c1 { transition-delay: 0.08s; }
+    .slide.active-slide .mini-c2 { transition-delay: 0.15s; }
+    .slide.active-slide .profile-capsule { transition-delay: 0.22s; }
+    .slide.active-slide .mini-c3 { transition-delay: 0.30s; }
+    .slide.active-slide .mini-c4 { transition-delay: 0.38s; }
+
+    /* Staggered entrance delays for Slide 2 capsules */
+    .slide.active-slide .s2-cap-dest  { transition-delay: 0.08s; }
+    .slide.active-slide .s2-cap-dur   { transition-delay: 0.16s; }
+    .slide.active-slide .s2-cap-weath { transition-delay: 0.24s; }
+    .slide.active-slide .s2-cap-budg  { transition-delay: 0.32s; }
+    .slide.active-slide .s2-cap-itin  { transition-delay: 0.40s; }
+
+    /* Staggered entrance delays for Slide 3 capsules */
+    .slide.active-slide .s3-cap-weath { transition-delay: 0.08s; }
+    .slide.active-slide .s3-cap-route { transition-delay: 0.16s; }
+    .slide.active-slide .s3-cap-act   { transition-delay: 0.24s; }
+    .slide.active-slide .s3-cap-top   { transition-delay: 0.32s; }
+
+    /* ==========================================================================
+       HERO VISUAL STAGE & CAPSULES
+       ========================================================================== */
+    .visual-stage {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 5px;
+    }
+
+    /* Accent Dots */
+    .accent-dot {
+      position: absolute;
+      border-radius: 50%;
+    }
+    .dot-orange { width: 10px; height: 10px; background: #fb923c; top: 120px; left: 30px; }
+    .dot-green { width: 11px; height: 11px; background: #4ade80; bottom: 100px; right: 35px; }
+    .dot-purple { width: 8px; height: 8px; background: #c084fc; top: 150px; right: 25px; }
+    .dot-blue { width: 9px; height: 9px; background: #38bdf8; bottom: 80px; left: 60px; }
+
+    /* Central Main Circular Photo */
+    .hero-circle-frame {
+      width: 235px;
+      height: 235px;
+      border-radius: 50%;
+      padding: 6px;
+      background: #ffffff;
+      box-shadow: 0 18px 42px -10px rgba(14, 116, 144, 0.22),
+                  0 0 0 1px rgba(224, 242, 254, 0.9);
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+      transform: translateZ(0);
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* Screen 1 Multi-Circle Layout */
+    .mini-circle {
+      position: absolute;
+      border-radius: 50%;
+      padding: 3px;
+      background: #ffffff;
+      box-shadow: 0 8px 22px rgba(2, 132, 199, 0.22);
+      z-index: 12;
+      overflow: hidden;
+    }
+    .mini-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .mini-c1 { width: 62px; height: 62px; top: 20px; left: 15px; }
+    .mini-c2 { width: 68px; height: 68px; top: 30px; right: 20px; }
+    .mini-c3 { width: 64px; height: 64px; bottom: 45px; left: 25px; }
+    .mini-c4 { width: 68px; height: 68px; bottom: 50px; right: 25px; }
+
+    /* Profile Badge (Screen 1) */
+    .profile-capsule {
+      position: absolute;
+      top: 125px;
+      left: 10px;
+      background: #ffffff;
+      padding: 6px 14px 6px 8px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.18);
+      z-index: 20;
+    }
+    .profile-avatar-img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .profile-info {
+      font-size: 11px;
+      line-height: 1.2;
+    }
+    .profile-name { font-weight: 700; color: #0f172a; }
+    .profile-rating { color: #f59e0b; font-weight: 600; }
+
+    /* Dotted Orbit Ring behind main circle for Screen 2 & 3 */
+    .dotted-orbit-ring {
+      position: absolute;
+      width: 275px;
+      height: 275px;
+      border-radius: 50%;
+      border: 1.5px dashed #38bdf8;
+      opacity: 0.5;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* Floating Capsule Base (Horizontal) */
+    .capsule {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      padding: 7px 12px;
+      border-radius: 18px;
+      box-shadow: 0 10px 24px -4px rgba(3, 105, 161, 0.16),
+                  0 2px 6px rgba(0, 0, 0, 0.02);
+      z-index: 15;
+      animation: floatPill 4s ease-in-out infinite alternate;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Floating Capsule Base (Vertical - Screen 3) */
+    .capsule-v {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      padding: 12px 10px;
+      border-radius: 18px;
+      box-shadow: 0 10px 24px -4px rgba(3, 105, 161, 0.16),
+                  0 2px 6px rgba(0, 0, 0, 0.02);
+      z-index: 15;
+      animation: floatPill 4s ease-in-out infinite alternate;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      width: 108px;
+    }
+
+    .capsule-icon-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon-blue { background: #e0f2fe; color: #0284c7; }
+    .icon-green { background: #dcfce7; color: #16a34a; }
+    .icon-orange { background: #ffedd5; color: #ea580c; }
+    .icon-pink { background: #ffe4e6; color: #e11d48; }
+    .icon-purple { background: #f3e8ff; color: #9333ea; }
+
+    .capsule-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .capsule-tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.1px;
+      line-height: 1.2;
+    }
+
+    .capsule-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .capsule-sub {
+      font-size: 10px;
+      font-weight: 500;
+      color: #64748b;
+      line-height: 1.25;
+      margin-top: 1px;
+    }
+
+    @keyframes floatPill {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-7px); }
+    }
+
+    /* Screen 2 Capsule Offsets (12, 10, 2, 8, 4 o'clock positions) */
+    .s2-cap-dest { top: 12px; left: 34%; transform: translateX(-50%); animation-delay: 0.2s; }
+    .s2-cap-dur { top: 82px; left: 6px; animation-delay: 0.8s; }
+    .s2-cap-weath { top: 82px; right: 6px; animation-delay: 1.4s; }
+    .s2-cap-budg { bottom: 45px; left: 6px; animation-delay: 0.5s; }
+    .s2-cap-itin { bottom: 45px; right: 6px; animation-delay: 1.9s; }
+
+    /* Screen 3 Capsule Offsets */
+    .s3-cap-weath { top: 12px; left: 50%; transform: translateX(-50%); animation-delay: 0.3s; }
+    .s3-cap-route { top: 100px; left: 6px; animation-delay: 1.1s; }
+    .s3-cap-act { top: 85px; right: 8px; animation-delay: 0.6s; }
+    .s3-cap-top { bottom: 22px; right: 8px; animation-delay: 1.8s; }
+
+    /* ==========================================================================
+       TEXT CONTENT SECTION
+       ========================================================================== */
+    .content-block {
+      text-align: center;
+      padding: 0 10px;
+      margin-bottom: 12px;
+    }
+
+    .s1-content, .s2-content {
+      margin-top: 14px;
+    }
+
+    .slide-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+
+    .slide-subtitle {
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      line-height: 1.55;
+      padding: 0 10px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       BUTTON & PAGINATION FOOTER
+       ========================================================================== */
+    .action-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      min-height: 70px;
+      justify-content: flex-end;
+    }
+
+    .primary-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+      color: #ffffff;
+      border: none;
+      padding: 16px 28px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -4px rgba(0, 102, 255, 0.45);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .primary-btn:hover {
+      background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+      box-shadow: 0 14px 28px -4px rgba(0, 102, 255, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .primary-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Pagination Dots */
+    .dots-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 26px;
+      border-radius: 12px;
+      background: #ff7700;
+    }
+
+    .dot.active-blue {
+      width: 26px;
+      border-radius: 12px;
+      background: #0284c7;
+    }
+
+    /* ==========================================================================
+       COMPLETION VIEW (AFTER GET STARTED OR SKIP)
+       ========================================================================== */
+    .completion-view {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+      z-index: 40;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .completion-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .app-success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #0066ff, #0052cc);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      margin-bottom: 24px;
+      box-shadow: 0 16px 36px rgba(0, 102, 255, 0.3);
+    }
+
+    .completion-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .completion-desc {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 300px;
+    }
+
+    .restart-btn {
+      background: #f1f5f9;
+      color: #0052cc;
+      border: 1px solid #bae6fd;
+      padding: 14px 28px;
+      border-radius: 24px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      background: #e0f2fe;
+      color: #003d99;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE & MOBILE DEVICE ADAPTATIONS
+       ========================================================================== */
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+        background: #e3f1ff;
+      }
+
+      .app-viewport {
+        max-width: 100vw;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .bg-clouds-layer {
+        display: none; /* Hide background clouds on phone screens to focus on app UI */
+      }
+    }
+
+    /* Compact Screen Adaptations (Height <= 740px) */
+    @media (max-height: 740px) {
+      .visual-stage {
+        height: 330px;
+      }
+
+      .hero-circle-frame {
+        width: 200px;
+        height: 200px;
+      }
+
+      .dotted-orbit-ring {
+        width: 230px;
+        height: 230px;
+      }
+
+      .slide-title {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      .slide-subtitle {
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .s1-content, .s2-content {
+        margin-top: 8px;
+      }
+
+      .slide {
+        padding: 10px 18px 16px 18px;
+      }
+
+      .primary-btn {
+        padding: 13px 24px;
+        font-size: 15px;
+      }
+
+      /* Adjust capsule offsets for compact heights */
+      .s2-cap-dur, .s2-cap-weath { top: 70px; }
+      .s2-cap-budg, .s2-cap-itin { bottom: 35px; }
+      .s3-cap-route, .s3-cap-act { top: 75px; }
+      .s3-cap-top { bottom: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+     BACKGROUND REALISTIC SVG CLOUDS
+     ========================================================================== -->
+  <div class="bg-clouds-layer">
+    <!-- Cloud 1 -->
+    <svg class="real-cloud-svg drift-1" viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgCloudGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+          <stop offset="70%" stop-color="#f0f9ff" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#bae6fd" stop-opacity="0.75"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#bgCloudGrad1)" d="M 40 95 C 18 95, 8 78, 15 62 C 8 46, 25 30, 48 34 C 58 15, 88 10, 110 25 C 125 5, 160 8, 178 28 C 198 22, 222 40, 218 64 C 230 76, 220 95, 198 95 Z"/>
+    </svg>
+
+    <!-- Cloud 2 -->
+    <svg class="real-cloud-svg drift-2" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgCloudGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
+          <stop offset="60%" stop-color="#f8fafc" stop-opacity="0.92"/>
+          <stop offset="100%" stop-color="#e0f2fe" stop-opacity="0.8"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#bgCloudGrad2)" d="M 45 105 C 20 105, 10 85, 18 68 C 10 50, 28 32, 52 38 C 65 18, 98 12, 122 28 C 140 8, 180 10, 198 32 C 220 25, 250 45, 245 72 C 260 86, 248 105, 222 105 Z"/>
+    </svg>
+
+    <!-- Cloud 3 -->
+    <svg class="real-cloud-svg drift-3" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgCloudGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.92"/>
+          <stop offset="100%" stop-color="#dbeafe" stop-opacity="0.7"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#bgCloudGrad3)" d="M 35 85 C 15 85, 5 70, 12 55 C 5 40, 20 25, 40 28 C 50 12, 75 8, 92 20 C 105 5, 135 8, 148 24 C 165 18, 188 32, 182 54 C 195 66, 185 85, 165 85 Z"/>
+    </svg>
+  </div>
+
+  <!-- Mobile App Frame Container -->
+  <div class="app-viewport">
+
+    <!-- Top App Header -->
+    <div class="app-header">
+      <div class="brand-logo">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        GoLumo
+      </div>
+      <button class="skip-btn" onclick="completeOnboarding()">SKIP</button>
+    </div>
+
+    <!-- Carousel Slider Container -->
+    <div class="slider-container" id="sliderContainer">
+      <div class="slides-track" id="slidesTrack">
+
+        <!-- ==================== SCREEN 1 (CLONE SCREEN 1) ==================== -->
+        <div class="slide" id="slide1">
+          <div class="visual-stage">
+            <!-- Stage Clouds -->
+            <svg class="stage-real-cloud" style="width: 130px; top: 10px; left: 0px; animation-delay: 0s;" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
+              <path fill="rgba(255, 255, 255, 0.92)" d="M 25 70 C 10 70, 2 58, 8 46 C 2 34, 15 22, 32 25 C 40 10, 62 8, 76 18 C 88 5, 112 8, 122 22 C 136 17, 152 28, 148 45 C 158 55, 150 70, 134 70 Z"/>
+            </svg>
+            <svg class="stage-real-cloud" style="width: 110px; top: 85px; right: -10px; animation-delay: 1.5s;" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
+              <path fill="rgba(255, 255, 255, 0.88)" d="M 25 70 C 10 70, 2 58, 8 46 C 2 34, 15 22, 32 25 C 40 10, 62 8, 76 18 C 88 5, 112 8, 122 22 C 136 17, 152 28, 148 45 C 158 55, 150 70, 134 70 Z"/>
+            </svg>
+
+            <div class="accent-dot dot-orange"></div>
+            <div class="accent-dot dot-purple"></div>
+            <div class="accent-dot dot-green"></div>
+
+            <!-- Central Circle Photo -->
+            <div class="hero-circle-frame">
+              <img src="/src/assets/images/traveler_backpack_lake_1786457507754.jpg" alt="Female traveler overlooking lake and railway bridge" class="hero-img" />
+            </div>
+
+            <!-- 4 Floating Mini Circles -->
+            <div class="mini-circle mini-c1">
+              <img src="https://images.unsplash.com/photo-1507608869274-d3177c8bb4c7?auto=format&fit=crop&w=200&q=80" alt="Hot air balloon" />
+            </div>
+            <div class="mini-circle mini-c2">
+              <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=200&q=80" alt="Santorini blue dome" />
+            </div>
+            <div class="mini-circle mini-c3">
+              <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=200&q=80" alt="Palace fort" />
+            </div>
+            <div class="mini-circle mini-c4">
+              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=200&q=80" alt="Tropical beach sunset" />
+            </div>
+
+            <!-- Profile Badge with Cute Girl Avatar -->
+            <div class="profile-capsule">
+              <img src="/src/assets/images/cute_girl_avatar_1786458282410.jpg" alt="Naira Avatar" class="profile-avatar-img" />
+              <div class="profile-info">
+                <div class="profile-name">Naira</div>
+                <div class="profile-rating">★ 4.9</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide Text -->
+          <div class="content-block s1-content">
+            <h1 class="slide-title">Every Journey,<br>A New Beginning.</h1>
+            <p class="slide-subtitle">
+              Explore new places, create unforgettable memories and make every trip count.
+            </p>
+          </div>
+
+          <!-- Footer Actions (NO Button on Screen 1) -->
+          <div class="action-footer">
+            <div class="dots-container">
+              <div class="dot active" onclick="goToSlide(0)"></div>
+              <div class="dot" onclick="goToSlide(1)"></div>
+              <div class="dot" onclick="goToSlide(2)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 2 (CLONE SCREEN 2) ==================== -->
+        <div class="slide" id="slide2">
+          <div class="visual-stage">
+            <!-- Stage Cloud -->
+            <svg class="stage-real-cloud" style="width: 140px; top: 5px; right: 20px; animation-delay: 0.8s;" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
+              <path fill="rgba(255, 255, 255, 0.94)" d="M 25 70 C 10 70, 2 58, 8 46 C 2 34, 15 22, 32 25 C 40 10, 62 8, 76 18 C 88 5, 112 8, 122 22 C 136 17, 152 28, 148 45 C 158 55, 150 70, 134 70 Z"/>
+            </svg>
+
+            <div class="accent-dot dot-purple"></div>
+            <div class="accent-dot dot-blue"></div>
+
+            <!-- Dotted Orbit Ring -->
+            <div class="dotted-orbit-ring"></div>
+
+            <!-- Central Circle Photo -->
+            <div class="hero-circle-frame">
+              <img src="/src/assets/images/scenic_european_town_1786457960380.jpg" alt="Traveler with map looking at lakefront town" class="hero-img" />
+            </div>
+
+            <!-- 5 Floating Capsules with Pastel Icon Boxes -->
+            <div class="capsule s2-cap-dest">
+              <div class="capsule-icon-box icon-purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-tag">Destination</div>
+                <div class="capsule-title">📍 Manali, India</div>
+              </div>
+            </div>
+
+            <div class="capsule s2-cap-dur">
+              <div class="capsule-icon-box icon-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-tag">Duration</div>
+                <div class="capsule-title">5 Days</div>
+              </div>
+            </div>
+
+            <div class="capsule s2-cap-weath">
+              <div class="capsule-icon-box icon-orange">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-tag">Weather</div>
+                <div class="capsule-title">18°C - 25°C</div>
+              </div>
+            </div>
+
+            <div class="capsule s2-cap-budg">
+              <div class="capsule-icon-box icon-pink">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-tag">Budget</div>
+                <div class="capsule-title">₹12,000</div>
+                <div class="capsule-sub">Per Person</div>
+              </div>
+            </div>
+
+            <div class="capsule s2-cap-itin">
+              <div class="capsule-icon-box icon-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-tag">Daily Itinerary</div>
+                <div class="capsule-sub">Planned for you</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide Text -->
+          <div class="content-block s2-content">
+            <h1 class="slide-title">Plan Less.<br>Travel More.</h1>
+            <p class="slide-subtitle">
+              Tell us where you want to go, and GoLumo helps turn your ideas into a perfect trip plan.
+            </p>
+          </div>
+
+          <!-- Footer Actions (NO Button on Screen 2) -->
+          <div class="action-footer">
+            <div class="dots-container">
+              <div class="dot" onclick="goToSlide(0)"></div>
+              <div class="dot active" onclick="goToSlide(1)"></div>
+              <div class="dot" onclick="goToSlide(2)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 3 (CLONE SCREEN 3) ==================== -->
+        <div class="slide" id="slide3">
+          <div class="visual-stage">
+            <!-- Stage Cloud -->
+            <svg class="stage-real-cloud" style="width: 130px; top: 10px; right: 10px; animation-delay: 0.5s;" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
+              <path fill="rgba(255, 255, 255, 0.95)" d="M 25 70 C 10 70, 2 58, 8 46 C 2 34, 15 22, 32 25 C 40 10, 62 8, 76 18 C 88 5, 112 8, 122 22 C 136 17, 152 28, 148 45 C 158 55, 150 70, 134 70 Z"/>
+            </svg>
+
+            <div class="accent-dot dot-orange"></div>
+            <div class="accent-dot dot-green"></div>
+
+            <!-- Dotted Orbit Ring -->
+            <div class="dotted-orbit-ring"></div>
+
+            <!-- Central Circle Photo -->
+            <div class="hero-circle-frame">
+              <img src="/src/assets/images/hiker_mountain_peak_1786457977343.jpg" alt="Male Hiker looking at mountain lake" class="hero-img" />
+            </div>
+
+            <!-- 4 Floating Capsules with Icon Boxes -->
+            <!-- Live Weather (Horizontal Top Center) -->
+            <div class="capsule s3-cap-weath">
+              <div class="capsule-icon-box icon-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-tag">Live Weather</div>
+                <div class="capsule-title">24°C</div>
+                <div class="capsule-sub">Clear Sky</div>
+              </div>
+            </div>
+
+            <!-- Smart Route (Vertical Mid Left) -->
+            <div class="capsule-v s3-cap-route">
+              <div class="capsule-icon-box icon-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-title">Smart Route</div>
+                <div class="capsule-sub">Best route for you</div>
+              </div>
+            </div>
+
+            <!-- Top Places (Vertical Mid Right) -->
+            <div class="capsule-v s3-cap-top">
+              <div class="capsule-icon-box icon-purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-title">Top Places</div>
+                <div class="capsule-sub">Curated just for you</div>
+              </div>
+            </div>
+
+            <!-- Activities (Vertical Bottom Right) -->
+            <div class="capsule-v s3-cap-act">
+              <div class="capsule-icon-box icon-orange">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+              <div class="capsule-text">
+                <div class="capsule-title">Activities</div>
+                <div class="capsule-sub">Adventure, Culture & more</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide Text -->
+          <div class="content-block">
+            <h1 class="slide-title">Everything You Need,<br>One Journey.</h1>
+            <p class="slide-subtitle">
+              Stay on track with smart itineraries, live weather, useful travel information and everything you need along the way.
+            </p>
+          </div>
+
+          <!-- Footer Actions (ONLY Screen 3 has the Get Started Button) -->
+          <div class="action-footer">
+            <button class="primary-btn" onclick="completeOnboarding()">
+              Get Started ➔
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Completion / Home View -->
+    <div class="completion-view" id="completionView">
+      <div class="app-success-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+
+      <h2 class="completion-title">Welcome to GoLumo!</h2>
+      <p class="completion-desc">
+        Your onboarding is complete. Let's start planning your dream journey today!
+      </p>
+
+      <button class="restart-btn" onclick="resetOnboarding()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Re-open Onboarding Flow
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ==========================================================================
+     JAVASCRIPT ONBOARDING LOGIC
+     ========================================================================== -->
+  <script>
+    // State Variables
+    let currentSlide = 0;
+    const totalSlides = 3;
+    let autoAdvanceTimer = null;
+
+    // DOM Elements
+    const track = document.getElementById('slidesTrack');
+    const container = document.getElementById('sliderContainer');
+    const completionView = document.getElementById('completionView');
+
+    // On Load: always start the slider (the parent app only shows this
+    // iframe when onboarding has not been completed yet)
+    window.addEventListener('DOMContentLoaded', () => {
+      goToSlide(0); // Initialize active-slide state
+      startAutoAdvance();
+    });
+
+    // Go to specific slide
+    function goToSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+
+      currentSlide = index;
+      track.style.transform = `translateX(-${currentSlide * 33.3333}%)`;
+
+      // Update active-slide class for fade-in / fade-out animations
+      for (let s = 1; s <= totalSlides; s++) {
+        const slide = document.getElementById(`slide${s}`);
+        if (slide) {
+          if (s === currentSlide + 1) {
+            slide.classList.add('active-slide');
+          } else {
+            slide.classList.remove('active-slide');
+          }
+        }
+      }
+
+      updateDots();
+
+      // Stop timer permanently if we reached Screen 3 (page index 2)
+      if (currentSlide === 2) {
+        stopAutoAdvance();
+      }
+    }
+
+    // Update dot indicators on all slides
+    function updateDots() {
+      for (let s = 1; s <= totalSlides; s++) {
+        const slide = document.getElementById(`slide${s}`);
+        if (!slide) continue;
+        const dots = slide.querySelectorAll('.dot');
+        dots.forEach((dot, idx) => {
+          if (idx === currentSlide) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    // Auto Advance Logic (Every 3 seconds, stops on page 3)
+    function startAutoAdvance() {
+      if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
+      
+      autoAdvanceTimer = setInterval(() => {
+        if (currentSlide < totalSlides - 1) {
+          goToSlide(currentSlide + 1);
+        } else {
+          stopAutoAdvance();
+        }
+      }, 3000);
+    }
+
+    function stopAutoAdvance() {
+      if (autoAdvanceTimer) {
+        clearInterval(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
+    }
+
+    // Complete Onboarding & Save State
+    function completeOnboarding() {
+      stopAutoAdvance();
+      localStorage.setItem('golumo_onboarding_completed', 'true');
+      // Tell the parent React app (GoLumo) that onboarding is done so it can
+      // move straight to the Login / Sign up screen.
+      if (window.parent) {
+        window.parent.postMessage({ type: 'golumo:onboarding-complete' }, '*');
+      }
+    }
+
+    // Reset Onboarding (For re-testing flow)
+    function resetOnboarding() {
+      localStorage.removeItem('golumo_onboarding_completed');
+      completionView.classList.remove('active');
+      currentSlide = 0;
+      goToSlide(0);
+      startAutoAdvance();
+    }
+
+    // ==========================================================================
+    // TOUCH & MOUSE SWIPE GESTURE HANDLERS
+    // ==========================================================================
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    // Touch Events
+    container.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      stopAutoAdvance(); // Pause auto timer on user touch interaction
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      currentX = e.touches[0].clientX;
+    }, { passive: true });
+
+    container.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      handleSwipe();
+    });
+
+    // Mouse Drag Events
+    container.addEventListener('mousedown', (e) => {
+      startX = e.clientX;
+      isDragging = true;
+      stopAutoAdvance();
+    });
+
+    container.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      currentX = e.clientX;
+    });
+
+    container.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      handleSwipe();
+    });
+
+    container.addEventListener('mouseleave', () => {
+      if (isDragging) {
+        isDragging = false;
+        handleSwipe();
+      }
+    });
+
+    function handleSwipe() {
+      const diffX = startX - currentX;
+      const threshold = 40; // minimum pixels to count as swipe
+
+      if (Math.abs(diffX) > threshold) {
+        if (diffX > 0) {
+          // Swiped Left -> Next Slide
+          if (currentSlide < totalSlides - 1) {
+            goToSlide(currentSlide + 1);
+          }
+        } else {
+          // Swiped Right -> Previous Slide
+          if (currentSlide > 0) {
+            goToSlide(currentSlide - 1);
+          }
+        }
+      }
+      startX = 0;
+      currentX = 0;
+    }
+  </script>
+</body>
+</html>
