@@ -53,6 +53,7 @@ export interface Trip {
   id: string;
   title: string;
   destination: string;
+  isFallback?: boolean;
   specificPlace?: string;
   startDate: string;
   endDate: string;
