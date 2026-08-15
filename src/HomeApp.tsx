@@ -41,8 +41,7 @@ export default function App({ onLogout }: AppProps) {
 
   const [isWeatherModalOpen, setIsWeatherModalOpen] = useState(false);
   const [isNearbyModalOpen, setIsNearbyModalOpen] = useState(false);
-  const [userLocation, setUserLocation] = useState("San Francisco");
-
+  const [userLocation, setUserLocation] = useState("Detecting location...");
   // Emergency SOS & Onboarding states
   const [isSOSModalOpen, setIsSOSModalOpen] = useState(false);
   const [isSOSTestMode, setIsSOSTestMode] = useState(false);
@@ -67,15 +66,23 @@ export default function App({ onLogout }: AppProps) {
     // Geolocation detection if available
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setUserLocation("San Francisco");
-        },
-        () => {
-          setUserLocation("San Francisco");
-        }
+        async (pos) => {
++         try {
++           const res = await fetch(
++             `/api/reverse-geocode?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`
++           );
++           const data = await res.json();
++           setUserLocation(data.city || "Your Location");
++         } catch (err) {
++           console.error("Reverse geocoding failed:", err);
++           setUserLocation("Your Location");
++         }
++       },
++       () => {
++         setUserLocation("Your Location");
++       }
       );
     }
-  }, []);
 
   const handleOpenSOS = (isTest: boolean = false) => {
     setIsSOSTestMode(isTest);
